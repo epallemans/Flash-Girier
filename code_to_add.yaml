@@ -1,0 +1,79 @@
+web_server:
+  port: 80
+
+time:
+  - platform: homeassistant
+    id: homeassistant_time
+
+text_sensor:
+  - platform: version
+    name: version
+  - platform: wifi_info
+    ip_address:
+      name: ip
+    ssid:
+      name: ssid
+    bssid:
+      name: bssid
+
+binary_sensor:
+  - platform: gpio
+    id: binary_switch_1
+    pin:
+      number: P10
+      inverted: true
+      mode: INPUT_PULLUP
+    on_press:
+      then:
+        - switch.toggle: switch_1
+
+switch:
+  - platform: gpio
+    id: switch_1
+    name: Relay 1
+    pin: P26
+    restore_mode: RESTORE_DEFAULT_ON
+    # uncomment next lines ig you prefer the LED to represent the on/off status
+    # on_turn_on:
+    #  - light.turn_on: light_status
+    # on_turn_off:
+    #  - light.turn_off: light_status
+
+light:
+  - platform: status_led
+    id: light_status
+    pin:
+      number: P23
+      inverted: true
+
+sensor:
+  - platform: uptime
+    name: uptime
+  - platform: wifi_signal
+    name: wifi_signal
+    update_interval: 10s
+  - platform: hlw8012
+    model: BL0937
+    change_mode_every: 3
+    update_interval: 3s
+    cf_pin:
+      number: P7
+      inverted: true
+    cf1_pin:
+      number: P6
+      inverted: true
+    sel_pin:
+      number: P24
+      inverted: true
+    current:
+      name: Current
+      filters:
+        - multiply: 0.453
+    voltage:
+      name: Voltage
+    power:
+      name: Power
+    energy:
+      name: Energy
+    voltage_divider: 781
+    current_resistor: 0.001 ohm
